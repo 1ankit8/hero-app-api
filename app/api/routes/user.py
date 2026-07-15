@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, status
 from app.api.deps import UserServiceDep
 from app.models.user import User
-from app.schemas.user import UserOut
+from app.schemas.user import CreateUser, UserOut
 
 router = APIRouter()
 
@@ -12,3 +12,7 @@ def list_users(
     limit: int = Query(100, ge=1, le=500),
 ) -> list[UserOut]:
     return service.list_users(skip=skip, limit=limit)
+
+@router.post("", response_model=UserOut, status_code=status.HTTP_201_CREATED)
+def create_user(user: CreateUser, service: UserServiceDep) -> User:
+    return service.create_user(user)

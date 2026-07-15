@@ -10,3 +10,9 @@ class UserRepository:
     def get_all(self, skip: int = 0, limit: int = 100) -> list[User]:
         stmt = select(User).offset(skip).limit(limit)
         return list(self.db.execute(stmt).scalars().all())
+
+    def create(self, user: User) -> User:
+        self.db.add(user)
+        self.db.commit()
+        self.db.refresh(user)
+        return user
